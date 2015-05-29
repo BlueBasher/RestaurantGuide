@@ -1,0 +1,145 @@
+﻿<section class="mainbar" data-ng-controller="admin as vm">
+    <script type="text/ng-template" id="editRestaurant.html">
+        <div class="modal-header">
+            <h3 class="modal-title">{{ title }}</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" data-ng-model="restaurant.name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address" class="col-sm-2 control-label">Address</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="address" data-ng-model="restaurant.address" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="city" class="col-sm-2 control-label">City</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="city" data-ng-model="restaurant.city" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl" class="col-sm-2 control-label">Image</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="imageUrl" data-ng-model="restaurant.imageUrl" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="geoLocation" class="col-sm-2 control-label">Geolocation</label>
+                    <div class="col-sm-10">
+                        <input type="number" class="form-control" id="geoLocation" data-ng-model="restaurant.geoLocation.latitude" />
+                        <input type="number" class="form-control" data-ng-model="restaurant.geoLocation.longitude" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="michelinStars" class="col-sm-2 control-label">MichelinStars</label>
+                    <div class="col-sm-10">
+                        <i class="fa fa-times fa-2x removeIcon"
+                           data-ng-click="restaurant.michelinStars = 0"></i>
+                        <i class="fa fa-star fa-2x edit"
+                           data-ng-class="{michelinStar: $index + 1 <= restaurant.michelinStars}"
+                           data-ng-repeat="i in getNumber(3) track by $index"
+                           data-ng-click="restaurant.michelinStars = $index + 1"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl" class="col-sm-2 control-label">Cuisines</label>
+                    <div class="col-sm-10">
+                        <div>
+                            <input type="text" class="form-control" id="imageUrl" data-ng-model="newCuisine" />
+                            <i class="fa fa-plus-square fa-2x addIcon"
+                               data-ng-click="addCuisine()"></i>
+                        </div>
+                        <div data-ng-repeat="cuisine in restaurant.cuisines">
+                            <span class="form-control-static">{{cuisine}}</span>
+                            <i class="fa fa-times fa-2x removeIcon"
+                               data-ng-click="removeCuisine(cuisine)"></i>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+
+    <section class="matter">
+        <div class="container">
+            <div class="row spacer">
+                <button class="btn btn-default"
+                        data-ng-click="vm.createRestaurant()">
+                    <i class="fa fa-plus-square fa-2x addIcon"></i>
+                    <span>Create</span>
+                </button>
+            </div>
+            <div class="row"
+                 data-ng-repeat="restaurant in vm.restaurants">
+                <div class="panel panel-default">
+                    <div class="panel-heading"
+                         data-ng-class="{collapsed: !restaurant.isExpanded}"
+                         data-toggle="collapse"
+                         data-target="#collapse{{restaurant.id}}">
+                        <h4 class="panel-title">
+                            <span>{{restaurant.name}}</span>
+                        </h4>
+                    </div>
+                    <div id="collapse{{restaurant.id}}"
+                         class="panel-collapse collapse"
+                         data-ng-class="{in: restaurant.isExpanded}">
+                        <div class="panel-body">
+                            <div class="col-xs-4 col-sm-2">
+                                <img class="restaurantImage"
+                                     data-ng-src="{{restaurant.imageUrl}}" alt="Image" />
+                            </div>
+                            <div class="col-xs-6 col-sm-8">
+                                <form>
+                                    <div class="form-group">
+                                        <p class="form-control-static">{{restaurant.address}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="form-control-static">{{restaurant.city}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <p class="form-control-static">{{restaurant.geoLocation.latitude}}</p>
+                                        <p class="form-control-static">{{restaurant.geoLocation.longitude}}</p>
+                                    </div>
+                                    <div class="form-group">
+                                        <i class="fa fa-star fa-2x michelinStar"
+                                           data-ng-repeat="i in vm.getNumber(restaurant.michelinStars) track by $index"></i>
+                                    </div>
+                                    <div class="form-group">
+                                        <div data-ng-repeat="cuisine in restaurant.cuisines">
+                                            <p class="form-control-static">{{cuisine.name}}</p>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-xs-2 col-sm-2">
+                                <div class="pull-right">
+                                    <i class="fa fa-pencil-square-o fa-2x editIcon"
+                                       data-ng-click="vm.editRestaurant(restaurant)"></i>
+                                    <i class="fa fa-times fa-2x removeIcon"
+                                       data-ng-click="vm.removeRestaurant(restaurant)"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                 data-ng-if="vm.moreRestaurantsAvailable">
+                <button class="btn btn-default"
+                        data-ng-click="vm.loadMoreRestaurants()">
+                    Load more restaurants
+                </button>
+            </div>
+        </div>
+    </section>
+</section>
